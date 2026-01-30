@@ -102,7 +102,7 @@ java -cp target/photo-organizer.jar com.photoorganizer.Main
 
 ```
 ╔════════════════════════════════════╗
-║     Photo Organizer v1.0          ║
+║     Photo Organizer v1.0           ║
 ║  Organiza fotos por año y mes      ║
 ╚════════════════════════════════════╝
 
