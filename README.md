@@ -4,9 +4,10 @@ Una aplicación Java para organizar automáticamente fotos basándose en sus met
 
 ## Características
 
-✅ **Java 21** - Sin frameworks externos, solo APIs estándar de Java  
+✅ **Java 21** - Sin frameworks externos pesados, solo APIs estándar de Java y una librería ligera para EXIF  
 ✅ **Configuración flexible** - Archivo `config.properties` para definir rutas  
 ✅ **Organización automática** - Agrupa fotos por año/mes: `YYYY/MM`  
+✅ **Metadatos EXIF** - Usa la fecha de captura (EXIF) cuando está disponible y, si no, la fecha de modificación del archivo  
 ✅ **Múltiples formatos** - Soporta JPG, PNG, GIF, BMP, WebP, TIFF, RAW  
 ✅ **Búsqueda recursiva** - Encuentra fotos en subdirectorios  
 
@@ -177,7 +178,6 @@ organizadas/
 
 ## Mejoras Futuras Posibles
 
-- Extracción completa de metadatos EXIF
 - Renombrado de archivos basado en metadatos
 - Filtrado por rango de fechas
 - Logging detallado

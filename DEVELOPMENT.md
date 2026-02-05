@@ -10,7 +10,8 @@ photo-organizer-java/
 │       │   └── com/photoorganizer/
 │       │       ├── Main.java              # Punto de entrada
 │       │       ├── Config.java            # Gestión de configuración
-│       │       ├── PhotoMetadata.java     # Extracción de metadatos
+│       │       ├── PhotoMetadata.java     # Extracción de metadatos (fecha de captura)
+│       │       ├── ExifDateExtractor.java # Utilidad para leer fecha EXIF
 │       │       └── PhotoOrganizer.java    # Lógica de organización
 │       └── resources/
 │           └── config.properties          # Archivo de configuración
@@ -75,9 +76,13 @@ java -cp target/photo-organizer.jar com.photoorganizer.Main
 
 #### PhotoMetadata.java
 - Extrae metadatos de los archivos de foto
-- Obtiene la fecha de última modificación del archivo
+- Prioriza la fecha de captura desde EXIF y usa la fecha de modificación del archivo como respaldo
 - Soporta múltiples formatos de imagen
 - Calcula YearMonth para organización
+ 
+#### ExifDateExtractor.java
+- Encapsula la lógica de lectura de metadatos EXIF
+- Obtiene la fecha de captura original usando la librería `metadata-extractor`
 
 #### PhotoOrganizer.java
 - Busca recursivamente fotos en el directorio de origen
@@ -131,15 +136,13 @@ tree /tmp/photos/destination/
 
 ✅ Lectura de configuración desde properties  
 ✅ Búsqueda recursiva de fotos  
-✅ Extracción de metadatos (fecha de archivo)  
+✅ Extracción de metadatos (fecha de captura vía EXIF con fallback a fecha de archivo)  
 ✅ Organización por año/mes  
 ✅ Creación de directorios automática  
 ✅ Reporte de progreso y errores  
 ✅ Soporte para múltiples formatos  
 
 ### Funcionalidades Futuras
-
-- Extracción completa de EXIF
 - Renombrado avanzado de archivos
 - Filtrado por rango de fechas
 - GUI con JavaFX
@@ -152,4 +155,4 @@ tree /tmp/photos/destination/
 - Los archivos originales NO se eliminan (operación de copia)
 - Los archivos duplicados son sobrescritos en destino
 - La aplicación es thread-safe para usos futuros
-- Sin dependencias externas (Java 21 API)
+- Usa una dependencia externa ligera (`metadata-extractor`) para leer metadatos EXIF

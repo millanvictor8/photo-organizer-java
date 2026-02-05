@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 /**
  * Clase para extraer y gestionar metadatos de fotos.
@@ -26,24 +27,32 @@ public class PhotoMetadata {
     }
 
     /**
-     * Extrae los metadatos de la foto
+     * Extrae los metadatos de la foto.
+     * Prioriza la fecha EXIF y usa la fecha de modificación del archivo como respaldo.
      */
     private void extractMetadata() {
-        try {
-            // Intentar obtener la fecha de modificación del archivo como fallback
-            long lastModified = Files.getLastModifiedTime(filePath).toMillis();
-            photoDate = LocalDateTime.ofInstant(
-                java.time.Instant.ofEpochMilli(lastModified),
-                java.time.ZoneId.systemDefault()
-            );
-            
-            System.out.println("Metadatos extraídos para: " + filePath.getFileName() 
-                + " (Fecha: " + photoDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + ")");
-            
-        } catch (IOException e) {
-            System.err.println("Error al obtener metadatos de " + filePath + ": " + e.getMessage());
-            photoDate = LocalDateTime.now();
+        // 1) Intentar obtener la fecha desde EXIF
+        Optional<LocalDateTime> exifDate = ExifDateExtractor.extractDate(filePath);
+
+        if (exifDate.isPresent()) {
+            photoDate = exifDate.get();
+        } else {
+            // 2) Si no hay EXIF, usar fecha de modificación del archivo
+            try {
+                long lastModified = Files.getLastModifiedTime(filePath).toMillis();
+                photoDate = LocalDateTime.ofInstant(
+                        java.time.Instant.ofEpochMilli(lastModified),
+                        java.time.ZoneId.systemDefault()
+                );
+            } catch (IOException e) {
+                System.err.println("Error al obtener fecha de modificación de " + filePath + ": " + e.getMessage());
+                // 3) Último recurso: fecha actual para no romper el flujo
+                photoDate = LocalDateTime.now();
+            }
         }
+
+        System.out.println("Metadatos extraídos para: " + filePath.getFileName()
+                + " (Fecha: " + photoDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + ")");
     }
 
     /**

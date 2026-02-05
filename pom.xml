@@ -20,7 +20,12 @@
     </properties>
 
     <dependencies>
-        <!-- Sin dependencias externas - solo Java estándar -->
+        <!-- Librería para leer metadatos EXIF de imágenes -->
+        <dependency>
+            <groupId>com.drewnoakes</groupId>
+            <artifactId>metadata-extractor</artifactId>
+            <version>2.19.0</version>
+        </dependency>
     </dependencies>
 
     <build>
